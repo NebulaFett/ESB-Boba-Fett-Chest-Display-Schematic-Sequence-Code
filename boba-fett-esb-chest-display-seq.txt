@@ -1,0 +1,304 @@
+BOBA FETT ESB CHEST DISPLAY
+ATmega328 Code
+
+Description:
+This code controls the LED sequence for a DIY Boba Fett ESB chest display using an ATmega328 microcontroller.
+
+The display sequence is based on research by RafalFett:
+https://www.thedentedhelmet.com/forums/threads/esb-chest-display-sequence.20061/
+
+The code is my own implementation based on the research referenced above.
+
+This project is shared for hobbyist and educational purposes. The code is provided "AS IS", without any warranty. Use it at your own risk.
+
+If you find an easier or more efficient way to implement the sequence, feedback and suggestions are welcome.
+
+SOURCE CODE (created in Arduino IDE)
+
+const byte dpA = 2;
+const byte dpB = 3;
+const byte dpC = 4;
+const byte dpD = 5;
+const byte dpE = 6;
+const byte dpF = 7;
+const byte dpG = 8;
+
+const byte displayPins[5] = {
+  9, 10, 11, 12, 13
+};
+
+const byte ledPins[5] = {
+  A0, A1, A2, A3, A4
+};
+
+const byte segmentPins[7] = {
+  dpA, dpB, dpC, dpD, dpE, dpF, dpG
+};
+
+struct Step {
+  unsigned long timeMs;
+  byte digits[5][7];
+  byte leds[5];
+};
+
+Step sequence[] = {
+
+  // 1
+  {300,
+    {
+      {0,0,0,0,0,0,0},
+      {0,0,0,0,0,0,0},
+      {0,0,0,0,0,0,0},
+      {0,0,0,0,0,0,0},
+      {0,0,0,0,0,0,0}
+    },
+    {0,0,0,0,0}
+  },
+
+  // 2
+  {600,
+    {
+      {0,1,1,1,1,0,1},
+      {0,1,1,1,1,1,0},
+      {1,0,0,1,1,1,1},
+      {1,1,0,0,1,1,1},
+      {0,0,0,0,0,1,0}
+    },
+    {0,1,0,0,0}
+  },
+
+  // 3
+  {600,
+    {
+      {1,1,1,1,1,1,1},
+      {1,1,1,1,1,1,1},
+      {1,1,1,1,1,1,1},
+      {1,1,1,1,1,1,1},
+      {1,1,1,1,1,1,1}
+    },
+    {0,0,0,1,0}
+  },
+
+  // 4
+  {500,
+    {
+      {0,1,1,1,1,0,1},
+      {0,1,1,1,1,1,0},
+      {1,0,0,1,1,1,1},
+      {1,1,0,0,1,1,1},
+      {0,0,0,0,0,1,0}
+    },
+    {0,0,1,0,0}
+  },
+
+  // 5
+  {600,
+    {
+      {1,0,1,0,1,1,1},
+      {1,0,0,1,1,1,1},
+      {1,1,1,0,1,0,1},
+      {1,1,1,1,1,0,0},
+      {0,0,0,0,1,1,1}
+    },
+    {0,0,0,0,1}
+  },
+
+  // 6
+  {800,
+    {
+      {0,1,0,0,0,0,1},
+      {0,0,1,0,0,1,0},
+      {1,0,0,1,0,0,0},
+      {0,0,0,0,1,1,0},
+      {1,0,0,0,0,0,1}
+    },
+    {0,0,0,0,0}
+  },
+
+  // 7
+  {600,
+    {
+      {0,1,1,1,1,0,1},
+      {0,1,1,1,1,1,0},
+      {1,0,0,1,1,1,1},
+      {1,1,0,0,1,1,1},
+      {0,0,0,0,0,1,0}
+    },
+    {1,0,0,0,0}
+  },
+
+  // 8
+  {500,
+    {
+      {0,1,1,0,1,1,1},
+      {0,0,1,1,0,1,1},
+      {1,1,0,1,1,0,1},
+      {1,1,1,0,0,1,1},
+      {0,0,0,0,1,1,0}
+    },
+    {1,0,0,0,0}
+  },
+
+  // 9
+  {800,
+    {
+      {0,1,0,0,0,0,1},
+      {0,0,1,0,0,1,0},
+      {1,0,0,1,0,0,0},
+      {0,0,0,0,1,1,0},
+      {1,0,0,0,0,0,1}
+    },
+    {0,0,0,0,0}
+  },
+
+  // 10
+  {600,
+    {
+      {0,1,1,1,1,0,1},
+      {0,1,1,1,1,1,0},
+      {1,0,0,1,1,1,1},
+      {1,1,0,0,1,1,1},
+      {0,0,0,0,0,1,0}
+    },
+    {0,1,0,0,0}
+  },
+
+  // 11
+  {700,
+    {
+      {0,1,1,0,1,1,1},
+      {1,0,1,1,1,1,0},
+      {1,1,0,1,1,0,1},
+      {1,1,1,1,1,1,1},
+      {1,0,0,0,1,1,0}
+    },
+    {0,0,0,0,0}
+  },
+
+  // 12
+  {600,
+    {
+      {0,1,1,1,1,0,1},
+      {0,1,1,1,1,1,0},
+      {1,0,0,1,1,1,1},
+      {1,1,0,0,1,1,1},
+      {0,0,0,0,0,1,0}
+    },
+    {0,1,0,0,0}
+  },
+
+  // 13
+  {600,
+    {
+      {1,0,1,0,1,1,1},
+      {1,0,0,1,1,1,1},
+      {1,1,1,0,1,0,1},
+      {1,1,1,1,1,0,0},
+      {0,0,0,0,1,1,1}
+    },
+    {0,0,0,0,1}
+  }
+
+};
+
+const byte sequenceLength =
+sizeof(sequence) / sizeof(sequence[0]);
+
+byte currentStep = 0;
+
+unsigned long stepStart = 0;
+
+byte currentDisplay = 0;
+unsigned long muxTimer = 0;
+
+void allDisplaysOff()
+{
+  for(byte i=0;i<5;i++)
+    digitalWrite(displayPins[i],LOW);
+}
+
+void setSegments(byte digit)
+{
+  for(byte s=0;s<7;s++)
+  {
+    digitalWrite(segmentPins[s],
+                  sequence[currentStep].digits[digit][s]);
+  }
+}
+
+void refreshDisplay()
+{
+
+  if(millis()-muxTimer < 2)
+    return;
+
+  muxTimer=millis();
+
+  allDisplaysOff();
+
+  setSegments(currentDisplay);
+
+  digitalWrite(displayPins[currentDisplay],HIGH);
+
+  currentDisplay++;
+
+  if(currentDisplay>=5)
+    currentDisplay=0;
+}
+
+
+
+void setLEDs()
+{
+  for(byte i=0;i<5;i++)
+    digitalWrite(ledPins[i],LOW);
+
+  for(byte i=0;i<5;i++)
+  {
+    if(sequence[currentStep].leds[i])
+    {
+      digitalWrite(ledPins[i],HIGH);
+      break;
+    }
+  }
+}
+
+void nextStep()
+{
+  currentStep++;
+
+  if(currentStep>=sequenceLength)
+    currentStep=0;
+
+  setLEDs();
+
+  stepStart=millis();
+}
+
+void setup()
+{
+  for(byte i=0;i<7;i++)
+    pinMode(segmentPins[i],OUTPUT);
+
+
+  for(byte i=0;i<5;i++)
+  {
+    pinMode(displayPins[i],OUTPUT);
+    pinMode(ledPins[i],OUTPUT);
+  }
+
+  allDisplaysOff();
+  setLEDs();
+
+  stepStart=millis();
+}
+
+void loop()
+{
+  refreshDisplay();
+
+  if(millis()-stepStart >= sequence[currentStep].timeMs)
+  {
+    nextStep();
+  }
+}
